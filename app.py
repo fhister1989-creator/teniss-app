@@ -8,7 +8,7 @@ st.title("🎾 Marcador en Vivo")
 
 # AQUÍ DEBES PEGAR TU LINK DE GOOGLE SHEETS PUBLICADO COMO CSV
 # Por ahora dejo uno de ejemplo para que no de error
-SHEET_URL = "URL_DE_TU_GOOGLE_SHEETS_AQUI"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRzTscK5RW5EkLnFnk3ZFbcoMU746ws-XZVYZoanTpx_Uo7aiijpbsM0cxbyLbZNxxBL8I_8G9ehoB-/pubhtml"
 
 def load_data():
     try:
