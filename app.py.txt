@@ -1,0 +1,81 @@
+import streamlit as st
+import pandas as pd
+
+# 1. CONFIGURACIÓN DE PÁGINA
+st.set_page_config(
+    page_title="Tenis Live Córdoba",
+    page_icon="🎾",
+    layout="centered"
+)
+
+# Estilo CSS para mejorar la apariencia en móviles
+st.markdown("""
+    <style>
+    .stMetric {
+        background-color: rgba(240, 242, 246, 0.5);
+        padding: 10px;
+        border-radius: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+st.title("🎾 Marcador en Vivo")
+
+# 2. TU ENLACE DE GOOGLE SHEETS (CSV)
+# Reemplaza lo que está entre comillas con tu link de "Publicar en la web"
+SHEET_URL = "TU_LINK_DE_GOOGLE_SHEETS_AQUI"
+
+def load_data():
+    try:
+        # Leemos el CSV y limpiamos espacios en los nombres de las columnas
+        df = pd.read_csv(SHEET_URL)
+        df.columns = [str(c).strip() for c in df.columns]
+        return df
+    except Exception as e:
+        st.error(f"Error al conectar con Google Sheets: {e}")
+        return None
+
+# 3. LÓGICA DE VISUALIZACIÓN
+df = load_data()
+
+if df is not None:
+    for index, row in df.iterrows():
+        # Contenedor por cada partido
+        with st.container():
+            st.subheader(f"🏆 {row.get('Torneo', 'Torneo de Tenis')}")
+            
+            # Fila de los Sets
+            s1 = str(row.get('Set 1', '-'))
+            s2 = str(row.get('Set 2', '0-0'))
+            
+            st.markdown(f"**Marcador:** Set 1: `{s1}` | Set 2 (Actual): `{s2}`")
+            
+            # Columnas para los puntos del Game (Marcador Visual)
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.metric(
+                    label=str(row.get('Jugador 1', 'Jugador 1')), 
+                    value=str(row.get('Marcador_Visual_J1', '0'))
+                )
+            
+            with col2:
+                st.metric(
+                    label=str(row.get('Jugador 2', 'Jugador 2')), 
+                    value=str(row.get('Marcador_Visual_J2', '0'))
+                )
+            
+            # Estado del partido con color
+            estado = str(row.get('Estado', 'VIVO')).upper()
+            if "VIVO" in estado or "JUGANDO" in estado:
+                st.success(f"🟢 {estado}")
+            else:
+                st.info(f"⚪ {estado}")
+            
+            st.divider()
+else:
+    st.warning("Esperando conexión con el Excel... Asegúrate de que el link CSV sea correcto.")
+
+# 4. BOTÓN DE ACTUALIZACIÓN
+if st.button('🔄 Actualizar Marcador'):
+    st.rerun()
