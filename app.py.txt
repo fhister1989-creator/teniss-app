@@ -3,7 +3,7 @@ import pandas as pd
 
 # 1. CONFIGURACIÓN DE PÁGINA
 st.set_page_config(
-    page_title="Tenis Live Córdoba",
+    page_title="Tenis Live Córdoba prueba",
     page_icon="🎾",
     layout="centered"
 )
